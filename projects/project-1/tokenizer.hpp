@@ -1,6 +1,6 @@
 #ifndef TOKENIZER_HPP
 #define TOKENIZER_HPP
-#include "user.hpp"
+#include <string>
 class Tokenizer{
   int capacity;
   int size;

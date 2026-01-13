@@ -12,7 +12,7 @@ std::string generateRandomAlphaStr(const int length) {//this function generates 
   }
   return randomAlphaStr;
 }
-std::string viginere(std::string input, std::string key) {
+std::string viginere(const std::string& input, const std::string& key) {
   std::string output;
   output.resize(input.size());//output will have same size as input
   for (int i = 0; i < input.size(); i++) {
