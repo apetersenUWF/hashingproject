@@ -45,8 +45,8 @@ void Tokenizer::test() {
 }
 
   bool Tokenizer::generateRawData(std::string filename) {
-    ofstream oFS(filename);
-    if (!oFS.is_open()) return false;
+    ofstream oFS(filename);//open the file
+    if (!oFS.is_open()) return false; //if file open fails return false
       for (int i = 0; i < size; i++) {
         oFS << users[i] << "," << generateRandomAlphaStr(passwordLength) << endl; //put all users and pw in a file
       }
@@ -59,13 +59,13 @@ void Tokenizer::test() {
     if (!inFS.is_open()) return false;
     ofstream oFS(outfile);
     if (!oFS.is_open()) return false;
-    std::string key = generateRandomAlphaStr(passwordLength);
+    std::string key = generateRandomAlphaStr(passwordLength);//generate a random key to use for the viginere cipher
     std::string user;
     std::string rawPW;
-    while (getline(inFS, user, ',')) {
-      getline(inFS, rawPW);
-      std::string encryptedPW = viginere(rawPW, key);
-      oFS << user << "," << encryptedPW << endl;
+    while (getline(inFS, user, ',')) {//while we can keep reading usernames from infile
+      getline(inFS, rawPW);//also store the raw password
+      std::string encryptedPW = viginere(rawPW, key);//encrypt the raw password using the viginere key
+      oFS << user << "," << encryptedPW << endl;//put the username and encrypted PW in a new file
     }
     inFS.close();
     oFS.close();

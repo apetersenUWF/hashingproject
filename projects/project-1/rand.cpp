@@ -16,8 +16,9 @@ std::string viginere(std::string input, std::string key) {
   std::string output;
   output.resize(input.size());//output will have same size as input
   for (int i = 0; i < input.size(); i++) {
-    int keyCode = key.at(i) - 'a';//find alphabet offset from key position i
-    char encryptedChar = ((input.at(i) + keyCode) % 26) + 'a';//encrypt the character
+    int alphabetOffset = key.at(i%key.size()) - 'a';//find alphabet offset from key position i
+    int inputPos = (input.at(i) - 'a');
+    char encryptedChar = ((inputPos + alphabetOffset) % 26) + 'a';//encrypt the character
     output.at(i) = encryptedChar;//put that encrypted character in the output
   }
   return output;
