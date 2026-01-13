@@ -30,14 +30,14 @@ void HashTable::insert(std::pair<std::string, std::string> data) {
   }
 int HashTable::lookup(std::string user) {
   int index = hash(user);
-  Chain* currNode = buckets.at(i);
+  Chain* currNode = buckets.at(index);
   if (currNode == nullptr) return -1; //empty spot found, user doesnt exist
   while (currNode != nullptr) {
     std::pair<std::string, std::string> data = currNode->getData();
     if (data.first == user) return index;//check if username matches
     currNode = currNode->getNext();
   }
-  return false;
+  return -1;
 }
 bool HashTable::remove(std::string user) {
   int index = lookup(user);
@@ -45,7 +45,7 @@ bool HashTable::remove(std::string user) {
   Chain* currNode = buckets.at(index);
   std::pair<std::string, std::string> data = currNode->getData();
   if (data.first == user) {//head node is the user
-    buckets.at(i) = currNode->getNext();//assign the successor as the new head
+    buckets.at(index) = currNode->getNext();//assign the successor as the new head
     delete currNode;//delete the user
     return true;
   }

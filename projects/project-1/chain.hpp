@@ -1,5 +1,6 @@
 #ifndef CHAIN_HPP
 #define CHAIN_HPP
+#include <string>
 class Chain{
   Chain* next;
   std::pair<std::string, std::string> data;
