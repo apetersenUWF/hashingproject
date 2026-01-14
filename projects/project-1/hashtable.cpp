@@ -9,7 +9,7 @@ int HashTable::hash(const std::string key) const{
   return hashCodeVal % capacity;
 }
 
-HashTable::HashTable(): capacity(10000), size(0), buckets(capacity) {}
+HashTable::HashTable(): capacity(HASHTABLECAPACITY), size(0), buckets(capacity) {}//uses prime 10007 as default capacity for scrambling
 HashTable::HashTable(int capacity): capacity(capacity), size(0), buckets(capacity) {}
 HashTable::~HashTable() {
   for (int i = 0; i < capacity; i++) {
@@ -31,7 +31,6 @@ void HashTable::insert(std::pair<std::string, std::string> data) {
 int HashTable::lookup(std::string user) {
   int index = hash(user);
   Chain* currNode = buckets.at(index);
-  if (currNode == nullptr) return -1; //empty spot found, user doesnt exist
   while (currNode != nullptr) {
     std::pair<std::string, std::string> data = currNode->getData();
     if (data.first == user) return index;//check if username matches

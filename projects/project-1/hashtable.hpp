@@ -2,6 +2,8 @@
 #define HASHTABLE_HPP
 #include <vector>
 #include "chain.hpp"
+const int HASHTABLECAPACITY = 10007;
+
 class HashTable{
   int capacity;
   int size;

@@ -48,7 +48,7 @@ void Tokenizer::test() {
     ofstream oFS(filename);//open the file
     if (!oFS.is_open()) return false; //if file open fails return false
       for (int i = 0; i < size; i++) {
-        oFS << users[i] << "," << generateRandomAlphaStr(passwordLength) << endl; //put all users and pw in a file
+        oFS << users[i] << "," << generateRandomCharStr(passwordLength) << endl; //put all users and pw in a file
       }
       oFS.close();
       return true;

@@ -1,7 +1,7 @@
 #include "rand.hpp"
 #include <random>
 #include <string>
-std::string generateRandomAlphaStr(const int length) {//this function generates a randiom string 
+std::string generateRandomCharStr(const int length) {//this function generates a randiom string of length length
   std::random_device randomDevice;
   std::mt19937 generator(randomDevice());//uses the mersene twister engine for fast random numbers
   std::uniform_int_distribution<> distr('a', 'z');//defines the range from ascii a to z
