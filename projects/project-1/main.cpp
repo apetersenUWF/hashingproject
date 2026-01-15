@@ -2,13 +2,10 @@
 #include <iostream>
 
 int main() {
-  //Tokenizer test;
-  HashTable hashtable;
-  std::cout << testHashTable(hashtable);
-  //test.test();
+  Test testobj;
+  testobj.runTestCases();
   return 0;
-  //for (int i = 0; i < 100; i++) std::cout << generateRandomCharStr(9) << std::endl;
 }
 //g++ -o run main.cpp rand.cpp tokenizer.cpp
-//g++ -o run main.cpp rand.cpp hashtable.cpp
+//g++ -o run main.cpp rand.cpp hashtable.cpp test.cpp tokenizer.cpp
 

@@ -4,13 +4,14 @@
 #include "tokenizer.hpp"
 #include "hashtable.hpp"
 class Test{
-  Tokenizer tokenizer;
-  HashTable hashtable;
+  Tokenizer* tokenizer;
+  HashTable* hashtable;
   int testHashTable();
   int testRand();
   int testTokenizer();
   public:
   Test();
+  ~Test();
   void runTestCases();
   void visualTest();
 };

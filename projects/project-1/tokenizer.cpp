@@ -63,7 +63,7 @@ void Tokenizer::test() {
     std::string rawPW;
     while (getline(inFS, user, ',')) {//while we can keep reading usernames from infile
       getline(inFS, rawPW);//also store the raw password
-      std::string encryptedPW = viginere(rawPW);//encrypt the raw password using the viginere key
+      std::string encryptedPW = vigenere(rawPW);//encrypt the raw password using the vigenere key
       oFS << user << "," << encryptedPW << endl;//put the username and encrypted PW in a new file
     }
     inFS.close();
