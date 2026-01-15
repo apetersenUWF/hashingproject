@@ -2,7 +2,7 @@
 #define HASHTABLE_HPP
 #include <vector>
 #include "chain.hpp"
-const int HASHTABLECAPACITY = 10007;
+const int HASHTABLECAPACITY = 10007;//large prime number to avoid overfilling and for scrambling
 
 class HashTable{
   int capacity;
@@ -12,10 +12,11 @@ class HashTable{
   public:
   HashTable();
   HashTable(int capacity);
+  HashTable(const std::string& filename);
   ~HashTable();
   void insert(std::pair<std::string, std::string> data);
-  int lookup(std::string user);
-  bool remove(std::string user);
+  std::string lookup(const std::string& user);
+  bool remove(const std::string& user);
 };
 
 #endif

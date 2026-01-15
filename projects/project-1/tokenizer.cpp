@@ -32,16 +32,9 @@ bool Tokenizer::load(std::string filename) {
     getline(inFS, throwAway);//get and trash the rest of the line
   }
   inFS.close();
+  if (!generateRawData()) return false;
+  if (!encryptData()) return false;
   return true;
-}
-
-void Tokenizer::test() {
-  bool a = load();
-  bool b = generateRawData();
-  bool c = encryptData();
-  cout << size << endl;
-  if (!a || !b || !c) cout << "error";
-  else cout << "good";
 }
 
   bool Tokenizer::generateRawData(std::string filename) {
@@ -69,4 +62,19 @@ void Tokenizer::test() {
     inFS.close();
     oFS.close();
     return true;
+  }
+
+  std::vector<std::pair<std::string, std::string>> Tokenizer::fetchTestPairs() {
+    std::vector<std::pair<std::string, std::string>> testPairs;
+    ifstream inFS;
+    inFS.open(RAW_OUTPUT_FILE);//open raw file to find test users
+    if (!inFS.is_open()) return testPairs;//if file hasnt been made yet return an empty vector
+    for (int i = 0; i < 9; i++) {//test from the first 10 entries
+      std::pair<std::string, std::string> curr;
+      getline(inFS, curr.first, ',');//put username in
+      getline(inFS, curr.second);//put PW in
+      if (i % 2 == 0) testPairs.push_back(curr);//only take every other entry
+    }
+    inFS.close();
+    return testPairs;
   }

@@ -1,6 +1,7 @@
 #include "test.hpp"
 #include <set>
 #include <iostream>
+#include <stdio.h>
 
 void Test::runTestCases() {
   std::cout << "Results of rand.hpp tests: " << std::endl;
@@ -9,6 +10,8 @@ void Test::runTestCases() {
   std::cout << testTokenizer() << std::endl;
   std::cout << "Results of hash table tests: " << std::endl;
   std::cout << testHashTable() << std::endl;
+  delete hashtable;
+  delete tokenizer;
 }
 int Test::testHashTable() {
   std::pair<std::string, std::string> testPairs[100];
@@ -22,14 +25,14 @@ int Test::testHashTable() {
     hashtable->insert(curr);
   }
   for (int i = 0; i < 100; i++) {//tests lookup feature
-    if (hashtable->lookup(testPairs[i].first) == -1) return -1;//make sure the names are in the table
+    if (hashtable->lookup(testPairs[i].first) == "") return -1;//make sure the names are in the table
     std::string randomTest = generateRandomCharStr(10);
-    if (hashtable->lookup(randomTest) != -1) return -2;//make sure random name isnt found
+    if (hashtable->lookup(randomTest) != "") return -2;//make sure random name isnt found
   }
   std::cout << "Pass Hash Table tests 1 and 2" << std::endl;
   for (int i = 0; i < 100; i++) {
     if (!hashtable->remove(testPairs[i].first)) return -3;//try to remove each of the pairs
-    if (hashtable->lookup(testPairs[i].first) != -1) return -4;//make sure they are not in the table
+    if (hashtable->lookup(testPairs[i].first) != "") return -4;//make sure they are not in the table
     std::string randomTest = generateRandomCharStr(15);
     if (hashtable->remove(randomTest)) return -5;//tests removing an id that doesnt exist
   }
@@ -62,9 +65,7 @@ int Test::testRand() {
 }
 int Test::testTokenizer() {//makes sure the file io doesnt fail, inspect generated files manually for formatting
   if (!tokenizer->load()) return -1;
-  if (!tokenizer->generateRawData()) return -2;
-  if (!tokenizer->encryptData()) return -3;
-  std::cout << "Pass tokenizer tests" << std::endl;
+  std::cout << "Pass tokenizer test" << std::endl;
   return 1;
 }
 Test::Test() {
@@ -74,4 +75,42 @@ Test::Test() {
 Test::~Test() {
   delete hashtable;
   delete tokenizer;
+}
+void Test::visualTest(){
+  const std::string filename = ENCRYPTED_OUTPUT_FILE;//this file has the user and pw info
+  tokenizer = new Tokenizer;
+  tokenizer->load();//load the data files
+  std::vector<std::pair<std::string, std::string>> testPairs = tokenizer->fetchTestPairs();//retrieve some names and raw PWs from the files for testing
+  std::vector<std::pair<std::string, std::string>> modifiedTestPairs = testPairs;//duplicate the test pairs
+  for (int i = 0; i < modifiedTestPairs.size(); i++) modifiedTestPairs.at(i).second.at(0)+=1;//change the first letter of each password
+  hashtable = new HashTable(filename);//creates a hash table with information from the provided file
+  const std::string HEADER1 = "USERID";
+  const std::string HEADER2 = "Password(raw->enc)";
+  const std::string HEADER3 = "Password(mod->enc)";
+  const std::string HEADER4 = "Password(table)";
+  const std::string HEADER5 = "Password(raw)";
+  const std::string HEADER6 = "Password(raw->mod)";
+  const std::string HEADER7 = "Result";
+  std::cout << "LEGAL:\n\n";
+  printf("%-12s%-20s%-20s%-20s%-10s\n", HEADER1.c_str(), HEADER5.c_str(), HEADER2.c_str(), HEADER4.c_str(), HEADER7.c_str());
+  for (int i = 0; i < testPairs.size(); i++) {
+    std::string user = testPairs.at(i).first;//gets a name from the test pairs
+    std::string rawPW = testPairs.at(i).second;//gets the raw PW from the test pairs
+    std::string cipheredPW = vigenere(rawPW);//performs the vigenere cipher on the raw PW
+    std::string hashTablePW = hashtable->lookup(user);//gets the encrypted PW from the hash table
+    std::string result = "mismatch";
+    if (cipheredPW == hashTablePW) result = "match";//compares both ways of getting the password
+    printf("%-12s%-20s%-20s%-20s%-10s\n", user.c_str(), rawPW.c_str(), cipheredPW.c_str(), hashTablePW.c_str(), result.c_str());
+  }
+  std::cout << "\nILLEGAL:\n\n";
+  printf("%-12s%-20s%-20s%-20s%-10s\n", HEADER1.c_str(), HEADER6.c_str(), HEADER3.c_str(), HEADER4.c_str(), HEADER7.c_str());
+  for (int i = 0; i < modifiedTestPairs.size(); i++) {
+    std::string user = modifiedTestPairs.at(i).first;//gets the name from the test pairs
+    std::string modifiedPW = modifiedTestPairs.at(i).second;//gets the modified PW from the test pairs
+    std::string cipheredModPW = vigenere(modifiedPW);//performs the vigenere cipher on the modified PW
+    std::string hashTablePW = hashtable->lookup(user);//gets the actual PW from the hash table
+    std::string result = "match";
+    if (cipheredModPW != hashTablePW) result = "mismatch";//compares the modified password to the one in the hash table
+    printf("%-12s%-20s%-20s%-20s%-10s\n", user.c_str(), modifiedPW.c_str(), cipheredModPW.c_str(), hashTablePW.c_str(), result.c_str());
+  }
 }

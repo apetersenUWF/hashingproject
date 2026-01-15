@@ -1,4 +1,5 @@
 #include "hashtable.hpp"
+#include <fstream>
 
 int HashTable::hash(const std::string key) const{
   std::string hashCode;
@@ -10,7 +11,27 @@ int HashTable::hash(const std::string key) const{
 }
 
 HashTable::HashTable(): capacity(HASHTABLECAPACITY), size(0), buckets(capacity) {}//uses prime 10007 as default capacity for scrambling
+
 HashTable::HashTable(int capacity): capacity(capacity), size(0), buckets(capacity) {}
+
+HashTable::HashTable(const std::string& filename) {
+  std::ifstream inFS;
+  capacity = HASHTABLECAPACITY;
+  size = 0;
+  buckets.resize(capacity);
+  inFS.open(filename);
+  if (!inFS.is_open()) return;
+  std::string user, PW;
+  while(getline(inFS, user, ',')) {
+    getline(inFS, PW);
+    std::pair<std::string, std::string> curr;
+    curr.first = user;
+    curr.second = PW;
+    insert(curr);
+    size++;
+  }
+}
+
 HashTable::~HashTable() {
   for (int i = 0; i < capacity; i++) {
       Chain* currNode = buckets.at(i);
@@ -21,31 +42,38 @@ HashTable::~HashTable() {
       }
     }
 }
+
 void HashTable::insert(std::pair<std::string, std::string> data) {
-  if (lookup(data.first) != -1) return; //duplicate keys not allowed
   int index = hash(data.first);//find the index
-  Chain* node = new Chain(data);
-    node->setNext(buckets.at(index));
-    buckets.at(index) = node;//make this node the head
+  Chain* curr = buckets.at(index);
+  while (curr != nullptr) {//checks if the user already exists in this bucket
+    if (curr->getData().first == data.first) return;//duplicates not allowed
+    curr = curr->getNext();
   }
-int HashTable::lookup(std::string user) {
+  Chain* node = new Chain(data);
+  node->setNext(buckets.at(index));
+  buckets.at(index) = node;//make this node the head
+  size++;
+  }
+std::string HashTable::lookup(const std::string& user) {
   int index = hash(user);
   Chain* currNode = buckets.at(index);
   while (currNode != nullptr) {
     std::pair<std::string, std::string> data = currNode->getData();
-    if (data.first == user) return index;//check if username matches
+    if (data.first == user) return data.second;
     currNode = currNode->getNext();
   }
-  return -1;
+  return "";
 }
-bool HashTable::remove(std::string user) {
-  int index = lookup(user);
-  if (index == -1) return false; //user doesnt exist
+bool HashTable::remove(const std::string& user) {
+  if (lookup(user) == "") return false; //user doesnt exist
+  int index = hash(user);
   Chain* currNode = buckets.at(index);
   std::pair<std::string, std::string> data = currNode->getData();
   if (data.first == user) {//head node is the user
     buckets.at(index) = currNode->getNext();//assign the successor as the new head
     delete currNode;//delete the user
+    size--;
     return true;
   }
 while (currNode->getNext() != nullptr){
