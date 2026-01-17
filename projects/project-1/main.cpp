@@ -1,10 +1,9 @@
 #include "test.hpp"
 
-
 int main() {
   Test testobj;
-  testobj.runTestCases();
-  testobj.visualTest();
+  //testobj.runTestCases();
+  testobj.comparisonTest();
   return 0;
 }
 //g++ -o run main.cpp rand.cpp tokenizer.cpp

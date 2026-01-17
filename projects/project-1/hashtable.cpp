@@ -1,15 +1,6 @@
 #include "hashtable.hpp"
 #include <fstream>
 
-int HashTable::hash(const std::string key) const{
-  std::string hashCode;
-  unsigned long long hashCodeVal = 0;
-  for (int i = 0; i < key.size(); i++) {
-    hashCodeVal = (hashCodeVal * 31) + key.at(i); //use the prime number 31 to scramble the value more
-  }
-  return hashCodeVal % capacity;
-}
-
 HashTable::HashTable(): capacity(HASHTABLECAPACITY), size(0), buckets(capacity) {}//uses prime 10007 as default capacity for scrambling
 
 HashTable::HashTable(int capacity): capacity(capacity), size(0), buckets(capacity) {}
@@ -43,6 +34,15 @@ HashTable::~HashTable() {
     }
 }
 
+int HashTable::hash(const std::string key) const{
+  std::string hashCode;
+  unsigned long long hashCodeVal = 0;
+  for (size_t i = 0; i < key.size(); i++) {
+    hashCodeVal = (hashCodeVal * 31) + key.at(i); //use the prime number 31 to scramble the value more
+  }
+  return hashCodeVal % capacity;
+}
+
 void HashTable::insert(std::pair<std::string, std::string> data) {
   int index = hash(data.first);//find the index
   Chain* curr = buckets.at(index);
@@ -54,7 +54,8 @@ void HashTable::insert(std::pair<std::string, std::string> data) {
   node->setNext(buckets.at(index));
   buckets.at(index) = node;//make this node the head
   size++;
-  }
+}
+
 std::string HashTable::lookup(const std::string& user) {
   int index = hash(user);
   Chain* currNode = buckets.at(index);
@@ -65,10 +66,11 @@ std::string HashTable::lookup(const std::string& user) {
   }
   return "";
 }
+
 bool HashTable::remove(const std::string& user) {
-  if (lookup(user) == "") return false; //user doesnt exist
   int index = hash(user);
   Chain* currNode = buckets.at(index);
+  if (currNode == nullptr) return false;
   std::pair<std::string, std::string> data = currNode->getData();
   if (data.first == user) {//head node is the user
     buckets.at(index) = currNode->getNext();//assign the successor as the new head

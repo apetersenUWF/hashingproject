@@ -1,6 +1,7 @@
 #include "rand.hpp"
 #include <random>
 #include <string>
+
 std::string generateRandomCharStr(const int length) {//this function generates a randiom string of length length
   std::random_device randomDevice;
   std::mt19937 generator(randomDevice());//uses the mersene twister engine for fast random numbers
@@ -12,10 +13,11 @@ std::string generateRandomCharStr(const int length) {//this function generates a
   }
   return randomAlphaStr;
 }
+
 std::string vigenere(const std::string& input, const std::string& key) {
   std::string output;
   output.resize(input.size());//output will have same size as input
-  for (int i = 0; i < input.size(); i++) {
+  for (size_t i = 0; i < input.size(); i++) {
     int alphabetOffset = key.at(i%key.size()) - 'a';//find alphabet offset from key position i
     int inputPos = (input.at(i) - 'a');
     char encryptedChar = ((inputPos + alphabetOffset) % 26) + 'a';//encrypt the character

@@ -13,6 +13,6 @@ class Test{
   Test();
   ~Test();
   void runTestCases();
-  void visualTest();
+  void comparisonTest();
 };
 #endif
